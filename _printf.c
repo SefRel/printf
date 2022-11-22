@@ -1,51 +1,46 @@
 #include "main.h"
 /**
- * _printf - a function that produces output according to a format and argument
- * @format: string containing the regular chars and format specifiers to print
- *
- * Return: the total number of characters printed
+ * _printf - is a function that selects the correct function to print.
+ * @format: identifier to look for.
+ * Return: the length of the string.
  */
-
-int _printf(const char *format, ...)
+int _printf(const char * const format, ...)
 {
-	int i = 0, count = 0;
-	int value = 0;
+	convert_match m[] = {
+		{"%s", printf_string}, {"%c", printf_char},
+		{"%%", printf_37},
+		{"%i", printf_int}, {"%d", printf_dec}, {"%r", printf_srev},
+		{"%R", printf_rot13}, {"%b", printf_bin}, {"%u", printf_unsigned},
+		{"%o", printf_oct}, {"%x", printf_hex}, {"%X", printf_HEX},
+		{"%S", printf_exclusive_string}, {"%p", printf_pointer}
+	};
+
 	va_list args;
-	int (*f)(va_list);
+	int i = 0, j, len = 0;
 
 	va_start(args, format);
-	if (format == NULL)
+	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
 		return (-1);
-	while (format[i])
+
+Here:
+	while (format[i] != '\0')
 	{
-		if (format[i] != '%')
+		j = 13;
+		while (j >= 0)
 		{
-			value = _putchar(format[i]);
-			count += value;
-			i++;
-			continue;
-		}
-		if (format[i] == '%')
-		{
-			f = check_specifiers(&format[i + 1]);
-			if (f != NULL)
+			if (m[j].id[0] == format[i] && m[j].id[1] == format[i + 1])
 			{
-				value = f(args);
-				count += value;
+				len += m[j].f(args);
 				i = i + 2;
-				continue;
+				goto Here;
 			}
-			if (format[i + 1] == '\0')
-				break;
-			if (format[i + 1] != '\0')
-			{
-				_putchar(format[i]);
-				count += value;
-				i = i + 2;
-				continue;
-			}
+			j--;
 		}
+		_putchar(format[i]);
+		len++;
+		i++;
 	}
-va_end(args);
-return (count);
+	va_end(args);
+	return (len);
 }
+

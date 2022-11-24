@@ -3,6 +3,8 @@
 #include "main.h"
 
 /**
+ * stdio.h - standard input and output library
+ *
  * main - Entry point
  *
  * Return: Always 0

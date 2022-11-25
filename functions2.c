@@ -186,3 +186,6 @@ int print_rot13string(va_list types, char buffer[],
 	}
 	return (count);
 }
+
+/** they said c is fun, if not i will have give up. but becuase i love doing the hard thing makes me going, what about you ken?**/
+
